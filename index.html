@@ -35,35 +35,64 @@
             padding: 5px 10px;
             cursor: pointer;
         }
+        .item-price {
+            width: 80%;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <h1>Contador de Inventario</h1>
-    <div class="container" id="inventory">
-        <!-- This loop generates 10 items -->
-        <script>
-            const inventoryContainer = document.getElementById('inventory');
-            for (let i = 0; i < 10; i++) {
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'item';
-                itemDiv.innerHTML = `
-                    <input type="text" id="item-name-${i}" value="Item ${i + 1}" />
-                    <p>Count: <span id="count-${i}">0</span></p>
-                    <button onclick="changeCount(${i}, 1)">+1</button>
-                    <button onclick="changeCount(${i}, -1)">-1</button>
-                `;
-                inventoryContainer.appendChild(itemDiv);
-            }
+    <div class="container" id="inventory"></div>
 
-            function changeCount(index, amount) {
-                const countElement = document.getElementById(`count-${index}`);
-                let currentCount = parseInt(countElement.textContent);
-                let newCount = currentCount + amount;
-                if (newCount >= 0) {  // Prevent negative counts
-                    countElement.textContent = newCount;
-                }
-            }
-        </script>
-    </div>
+    <script>
+        const inventoryData = [
+            { name: "Item 1", count: 0, price: 10 },
+            { name: "Item 2", count: 0, price: 15 },
+            { name: "Item 3", count: 0, price: 20 },
+            { name: "Item 4", count: 0, price: 25 },
+            { name: "Item 5", count: 0, price: 30 },
+            { name: "Item 6", count: 0, price: 35 },
+            { name: "Item 7", count: 0, price: 40 },
+            { name: "Item 8", count: 0, price: 45 },
+            { name: "Item 9", count: 0, price: 50 },
+            { name: "Item 10", count: 0, price: 55 }
+        ];
+
+        const inventory = document.getElementById("inventory");
+
+        function updateUI(items) {
+            inventory.innerHTML = "";
+            items.forEach((item, index) => {
+                const itemDiv = document.createElement("div");
+                itemDiv.className = "item";
+                itemDiv.innerHTML = `
+                    <input type="text" value="${item.name}" onchange="updateName(${index}, this.value)">
+                    <p>Count: <span id="count-${index}">${item.count}</span></p>
+                    <input type="number" class="item-price" value="${item.price}" onchange="updatePrice(${index}, this.value)" placeholder="Price">
+                    <button onclick="changeCount(${index}, 1)">+1</button>
+                    <button onclick="changeCount(${index}, -1)">-1</button>
+                `;
+                inventory.appendChild(itemDiv);
+            });
+        }
+
+        function updateName(index, newName) {
+            inventoryData[index].name = newName;
+            updateUI(inventoryData);
+        }
+
+        function updatePrice(index, newPrice) {
+            inventoryData[index].price = parseFloat(newPrice);
+        }
+
+        function changeCount(index, amount) {
+            inventoryData[index].count += amount;
+            updateUI(inventoryData);
+        }
+
+        // Initialize the inventory view
+        updateUI(inventoryData);
+    </script>
 </body>
 </html>
