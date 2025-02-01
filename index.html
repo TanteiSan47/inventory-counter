@@ -3,96 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contador de Inventario</title>
+    <title>Jewelry Inventory Tracker</title>
     <style>
+        /* Add your styles here */
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             background-color: #f4f4f4;
-        }
-        h1 {
-            margin-top: 20px;
-        }
-        .container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            max-width: 500px;
-            margin: auto;
         }
         .item {
             background: white;
             padding: 10px;
             border-radius: 8px;
             box-shadow: 0 0 5px gray;
+            margin-bottom: 10px;
         }
         .item input {
-            width: 80%;
-            text-align: center;
-        }
-        button {
-            margin: 5px;
-            padding: 5px 10px;
-            cursor: pointer;
-        }
-        .item-price {
             width: 80%;
             text-align: center;
         }
     </style>
 </head>
 <body>
-    <h1>Contador de Inventario</h1>
-    <div class="container" id="inventory"></div>
+    <h1>Jewelry Inventory Tracker</h1>
+
+    <div id="inventory"></div>
 
     <script>
-        const inventoryData = [
-            { name: "Item 1", count: 0, price: 10 },
-            { name: "Item 2", count: 0, price: 15 },
-            { name: "Item 3", count: 0, price: 20 },
-            { name: "Item 4", count: 0, price: 25 },
-            { name: "Item 5", count: 0, price: 30 },
-            { name: "Item 6", count: 0, price: 35 },
-            { name: "Item 7", count: 0, price: 40 },
-            { name: "Item 8", count: 0, price: 45 },
-            { name: "Item 9", count: 0, price: 50 },
-            { name: "Item 10", count: 0, price: 55 }
+        let inventory = [
+            { name: 'Gold Ring', count: 10, price: 150 },
+            { name: 'Silver Necklace', count: 5, price: 80 },
+            // Add more items as needed
         ];
 
-        const inventory = document.getElementById("inventory");
-
-        function updateUI(items) {
-            inventory.innerHTML = "";
-            items.forEach((item, index) => {
-                const itemDiv = document.createElement("div");
-                itemDiv.className = "item";
+        function updateUI() {
+            const inventoryContainer = document.getElementById('inventory');
+            inventoryContainer.innerHTML = '';
+            inventory.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.classList.add('item');
                 itemDiv.innerHTML = `
                     <input type="text" value="${item.name}" onchange="updateName(${index}, this.value)">
-                    <p>Count: <span id="count-${index}">${item.count}</span></p>
-                    <input type="number" class="item-price" value="${item.price}" onchange="updatePrice(${index}, this.value)" placeholder="Price">
-                    <button onclick="changeCount(${index}, 1)">+1</button>
-                    <button onclick="changeCount(${index}, -1)">-1</button>
+                    <input type="number" value="${item.price}" onchange="updatePrice(${index}, this.value)">
+                    <input type="number" value="${item.count}" onchange="updateCount(${index}, this.value)">
+                    <button onclick="sellItem(${index})">Sell</button>
+                    <p>Stock: ${item.count} | Price: $${item.price}</p>
                 `;
-                inventory.appendChild(itemDiv);
+                inventoryContainer.appendChild(itemDiv);
             });
         }
 
         function updateName(index, newName) {
-            inventoryData[index].name = newName;
-            updateUI(inventoryData);
+            inventory[index].name = newName;
+            updateUI();
         }
 
         function updatePrice(index, newPrice) {
-            inventoryData[index].price = parseFloat(newPrice);
+            inventory[index].price = parseFloat(newPrice);
+            updateUI();
         }
 
-        function changeCount(index, amount) {
-            inventoryData[index].count += amount;
-            updateUI(inventoryData);
+        function updateCount(index, newCount) {
+            inventory[index].count = parseInt(newCount);
+            updateUI();
         }
 
-        // Initialize the inventory view
-        updateUI(inventoryData);
+        function sellItem(index) {
+            if (inventory[index].count > 0) {
+                inventory[index].count--;
+                alert(`Sold 1 ${inventory[index].name} for $${inventory[index].price}`);
+                updateUI();
+            } else {
+                alert('Out of stock!');
+            }
+        }
+
+        // Initial UI update
+        updateUI();
     </script>
 </body>
 </html>
